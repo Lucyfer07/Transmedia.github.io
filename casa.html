@@ -28,14 +28,129 @@
             <p>Explora la historia y la atmósfera de la casa donde Logan enfrentó sus demonios:</p>
             <img src="casa.jpg" alt="Casa antigua" class="casa-imagen">
             
-            <p> La casa, una antigua construcción con sombras que susurran, se ha mantenido en pie a través de los años, reflejando los miedos y anhelos de quienes han cruzado su umbral. Cada habitación guarda secretos, y cada pasillo cuenta una historia. Al recorrer sus espacios, se siente la presencia de Logan, atrapado entre el eco del silencio y el clamor de su propia soledad.</p>
+            <p>La casa, una antigua construcción con sombras que susurran, se ha mantenido en pie a través de los años, reflejando los miedos y anhelos de quienes han cruzado su umbral. Cada habitación guarda secretos, y cada pasillo cuenta una historia. Al recorrer sus espacios, se siente la presencia de Logan, atrapado entre el eco del silencio y el clamor de su propia soledad.</p>
+        </section>
+        
+
+        <section class="comentarios">
+            <h2>Comentarios</h2>
             
+            <!-- Comentarios fijos -->
+            <div id="comentarios-fijos">
+                <h3>Comentarios destacados</h3>
+                <div class="comentario">
+                    <strong>Ana:</strong> "Esta casa me pone la piel de gallina, pero no puedo dejar de leer sobre ella."
+                </div>
+                <div class="comentario">
+                    <strong>Carlos:</strong> "El episodio 2 fue increíble, me dejó pensando en las sombras de mi propia casa."
+                </div>
+                <div class="comentario">
+                    <strong>María:</strong> "Me encanta cómo relatan las historias, realmente me transporta al lugar."
+                </div>
+                <div class="comentario">
+                    <strong>Samantha:</strong> "Me parece interesante el giro que da la historia, que el fantasma sea el mismo y su pasado, te pone a pensar como las cosas que te pasan de pequeño se te quedan toda la vida, y lo importante que es poder superar y crecer."
+                </div>
+                <div class="comentario">
+                    <strong>Jhonny:</strong> "Me parece una historia que atrapa mucho, desde que inicia se siente la intriga de que va a pasar después, y tanto paranormal o no, se puede sentir un panorama desolador que entristece en la historia."
+                </div>
+            </div>
+        
+            <!-- Comentarios dinámicos -->
+            <div id="comentarios-dinamicos">
+                <h3>Comentanos</h3>
+                <!-- Aquí se agregarán los comentarios dinámicos desde JavaScript -->
+            </div>
+        
+            <!-- Formulario para nuevos comentarios -->
+            <form id="form-comentarios">
+                <label for="nombre">Nombre:</label>
+                <input type="text" id="nombre" name="nombre" required>
+                
+                <label for="comentario">Comentario:</label>
+                <textarea id="comentario" name="comentario" rows="4" required></textarea>
+                
+                <button type="submit">Enviar</button>
+            </form>
+        </section>
+        
+
+            <!-- Lugar para mostrar comentarios -->
+            <div id="comentarios-lista">
+                <h3>Comentarios recientes</h3>
+                <!-- Aquí se mostrarán los comentarios -->
+            </div>
         </section>
     </main>
 
     <footer>
         <p>&copy; 2024 El Eco del Vacío</p>
     </footer>
+
+    <script>
+        // Función para cargar comentarios almacenados en el Local Storage
+        function cargarComentarios() {
+            const comentariosGuardados = JSON.parse(localStorage.getItem('comentarios')) || [];
+            comentariosGuardados.forEach(function(comentario, index) {
+                agregarComentario(comentario.nombre, comentario.comentario, index);
+            });
+        }
+    
+        // Función para agregar un comentario al DOM con opción de eliminar
+        function agregarComentario(nombre, comentario, index) {
+            const comentarioElemento = document.createElement('div');
+            comentarioElemento.classList.add('comentario');
+            comentarioElemento.innerHTML = `
+                <strong>${nombre}</strong>: ${comentario}
+                <button class="eliminar-comentario" data-index="${index}">Eliminar</button>
+            `;
+    
+            document.getElementById('comentarios-lista').appendChild(comentarioElemento);
+    
+            // Agregar evento para el botón "Eliminar"
+            comentarioElemento.querySelector('.eliminar-comentario').addEventListener('click', function() {
+                eliminarComentario(index);
+            });
+        }
+    
+        // Función para eliminar un comentario del DOM y Local Storage
+        function eliminarComentario(index) {
+            const comentariosGuardados = JSON.parse(localStorage.getItem('comentarios')) || [];
+    
+            // Eliminar el comentario del array
+            comentariosGuardados.splice(index, 1);
+    
+            // Actualizar Local Storage
+            localStorage.setItem('comentarios', JSON.stringify(comentariosGuardados));
+    
+            // Actualizar el DOM recargando los comentarios
+            document.getElementById('comentarios-lista').innerHTML = '';
+            cargarComentarios();
+        }
+    
+        // Evento de envío de formulario
+        document.getElementById('form-comentarios').addEventListener('submit', function(event) {
+            event.preventDefault();
+            
+            // Obtener el nombre y comentario
+            const nombre = document.getElementById('nombre').value;
+            const comentario = document.getElementById('comentario').value;
+    
+            // Guardar el comentario en el Local Storage
+            const comentariosGuardados = JSON.parse(localStorage.getItem('comentarios')) || [];
+            comentariosGuardados.push({ nombre: nombre, comentario: comentario });
+            localStorage.setItem('comentarios', JSON.stringify(comentariosGuardados));
+    
+            // Agregar el comentario al DOM
+            agregarComentario(nombre, comentario, comentariosGuardados.length - 1);
+    
+            // Limpiar el formulario
+            document.getElementById('form-comentarios').reset();
+        });
+    
+        // Cargar comentarios al cargar la página
+        document.addEventListener('DOMContentLoaded', cargarComentarios);
+    </script>
+    
+    
 </body>
 </html>
-
